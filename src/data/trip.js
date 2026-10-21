@@ -2,8 +2,8 @@
 export const TRIP = {
   first: "Goutham",
   second: "Sowmiya",
-  start: "2026-12-12T06:00:00+05:30", // trip start, used by the countdown
-  dateLabel: "12 - 16 December 2026",
+  start: "2026-12-20T06:00:00+05:30", // trip start, used by the countdown
+  dateLabel: "20 - 26 December 2026",
   tagline: "5 Days of Love, Lanterns & Golden Bridges",
   budget: "Rs 1,08,000 - 1,52,000",
   budgetNote: "estimated total for two",
