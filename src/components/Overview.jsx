@@ -1,41 +1,42 @@
-import { useEffect, useRef } from "react";
-import L from "leaflet";
 import { CalendarDays, MapPin, HeartHandshake, Hotel, Wallet } from "lucide-react";
 import Reveal, { SectionTitle } from "./Reveal.jsx";
 import { PLACES, TRIP } from "../data/trip.js";
 
 function TripMap() {
-  const ref = useRef(null);
+  const points = [
+    { ...PLACES[0], x: 58, y: 54 },
+    { ...PLACES[3], x: 28, y: 64 },
+    { ...PLACES[2], x: 68, y: 25 },
+    { ...PLACES[1], x: 49, y: 84 },
+  ];
+  const route = [points[0], points[1], points[2], points[0], points[3]];
 
-  useEffect(() => {
-    const map = L.map(ref.current, { scrollWheelZoom: false, zoomControl: true }).setView([16.0, 108.2], 9);
-
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-      maxZoom: 18,
-      attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-    }).addTo(map);
-
-    const icon = L.divIcon({ className: "", html: '<div class="pin"></div>', iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -26] });
-
-    PLACES.forEach((p) => {
-      L.marker([p.lat, p.lng], { icon, title: p.name })
-        .addTo(map)
-        .bindPopup(`<strong>${p.name}</strong><br/>${p.note}`);
-    });
-
-    L.polyline(
-      [PLACES[0], PLACES[3], PLACES[2], PLACES[0], PLACES[1]].map((p) => [p.lat, p.lng]),
-      { color: "#C41E3A", weight: 3, dashArray: "6 8", opacity: 0.8 }
-    ).addTo(map);
-
-    const timer = setTimeout(() => map.invalidateSize(), 300);
-    return () => {
-      clearTimeout(timer);
-      map.remove();
-    };
-  }, []);
-
-  return <div ref={ref} className="h-72 w-full rounded-3xl shadow-lift sm:h-96" role="application" aria-label="Map of Da Nang, Hoi An and Hai Van Pass" />;
+  return (
+    <figure className="overflow-hidden rounded-3xl bg-[#cfe9ee] shadow-lift">
+      <svg viewBox="0 0 100 100" className="block h-72 w-full sm:h-96" role="img" aria-labelledby="route-map-title route-map-desc">
+        <title id="route-map-title">Vietnam honeymoon route</title>
+        <desc id="route-map-desc">A static route connecting Da Nang, Ba Na Hills, Hai Van Pass, and Hoi An.</desc>
+        <rect width="100" height="100" fill="#cfe9ee" />
+        <path d="M0 14C19 7 30 17 42 11s18-11 29-5 18 2 29-6v100H0Z" fill="#e9f2e0" />
+        <path d="M4 40c16-11 27-3 38-13s28-12 54-1" fill="none" stroke="#b8d8da" strokeWidth="1.5" opacity=".8" />
+        <path d="M6 75c18-8 29 5 44-4s30-4 45-16" fill="none" stroke="#b8d8da" strokeWidth="1.5" opacity=".8" />
+        <polyline points={route.map((point) => `${point.x},${point.y}`).join(" ")} fill="none" stroke="#c41e3a" strokeWidth="1.6" strokeDasharray="3 2" strokeLinecap="round" strokeLinejoin="round" />
+        {points.map((point, index) => (
+          <g key={point.name}>
+            <circle cx={point.x} cy={point.y} r="4.4" fill="#fff8f0" opacity=".94" />
+            <circle cx={point.x} cy={point.y} r="2.5" fill="#c41e3a" />
+            <text x={point.x} y={point.y + (index === 2 ? -6 : 8)} textAnchor="middle" fill="#1a1a2e" fontSize="4" fontWeight="700">
+              {point.name}
+            </text>
+          </g>
+        ))}
+      </svg>
+      <figcaption className="flex items-center justify-between gap-3 bg-white/80 px-5 py-3 text-sm text-navy/75">
+        <span>Da Nang route, drawn for your journey</span>
+        <span className="whitespace-nowrap font-semibold text-teal">Not to scale</span>
+      </figcaption>
+    </figure>
+  );
 }
 
 const CARDS = [

@@ -154,28 +154,6 @@ section[id] {
   animation: heartRise 1.1s ease-out infinite;
 }
 
-/* Leaflet tweaks */
-.leaflet-container {
-  font-family: Inter, system-ui, sans-serif;
-  background: #cfe9ee;
-}
-.pin {
-  width: 28px;
-  height: 28px;
-  border-radius: 50% 50% 50% 0;
-  background: #c41e3a;
-  transform: rotate(-45deg);
-  border: 3px solid #fff8f0;
-  box-shadow: 0 6px 14px rgba(26, 26, 46, 0.4);
-}
-.pin::after {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  border-radius: 50%;
-  background: #fff8f0;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

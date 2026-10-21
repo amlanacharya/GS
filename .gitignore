@@ -1,6 +1,7 @@
 node_modules
 dist
 qr-card.png
+.playwright-cli/
 
 # graft's local graph cache — regenerable, not committed (run `graft build`).
 /graft/
