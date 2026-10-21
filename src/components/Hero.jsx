@@ -9,11 +9,11 @@ import { releaseLantern } from "../lib/releaseLantern.js";
 
 function Unit({ value, label }) {
   return (
-    <div className="flex w-16 flex-col items-center rounded-2xl border border-white/20 bg-white/10 py-3 backdrop-blur-md sm:w-24 sm:py-4">
+    <div className="flex w-16 flex-col items-center rounded-2xl border border-white/25 bg-navy/50 py-3 backdrop-blur-md sm:w-24 sm:py-4">
       <span className="font-display text-2xl font-bold tabular-nums text-cream sm:text-4xl">
         {String(value).padStart(2, "0")}
       </span>
-      <span className="mt-1 text-[10px] uppercase tracking-widest text-gold sm:text-xs">{label}</span>
+      <span className="mt-1 text-xs uppercase tracking-widest text-gold">{label}</span>
     </div>
   );
 }
@@ -87,7 +87,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.1, duration: 0.9 }}
-          className="mt-5 font-script text-xl text-cream/95 sm:text-3xl"
+          className="mt-5 text-balance font-script text-xl text-cream/95 sm:text-3xl"
         >
           {TRIP.tagline}
         </motion.p>
@@ -108,7 +108,7 @@ export default function Hero() {
                 <Unit value={time.minutes} label="Mins" />
                 <Unit value={time.seconds} label="Secs" />
               </div>
-              <p className="mt-5 font-script text-lg italic text-cream/90 sm:text-2xl">{sleepsLine(time.days)}</p>
+              <p className="mt-5 text-balance font-script text-lg italic text-cream sm:text-2xl drop-shadow">{sleepsLine(time.days)}</p>
             </>
           )}
         </motion.div>

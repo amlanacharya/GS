@@ -77,12 +77,12 @@ export default function Overview() {
             </div>
             <ul className="mt-4 divide-y divide-white/10">
               {TRIP.hotels.map((h) => (
-                <li key={h.name} className="py-3">
+                <li key={h.name} className="py-2">
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(h.query)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-semibold underline-offset-4 hover:text-gold hover:underline"
+                    className="inline-flex min-h-11 items-center font-semibold underline-offset-4 hover:text-gold hover:underline"
                   >
                     {h.name}
                   </a>

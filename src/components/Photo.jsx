@@ -8,7 +8,7 @@ export default function Photo({ id, alt, kind, className = "", eager = false }) 
 
   return (
     <div className={`relative overflow-hidden ${className}`} aria-label={alt} role="img">
-      <Scene kind={kind} className="absolute inset-0 h-full w-full" />
+      <Scene kind={kind} dish={id} className="absolute inset-0 h-full w-full" />
       {useImage && (
         <img
           src={`/photos/${id}.jpg`}

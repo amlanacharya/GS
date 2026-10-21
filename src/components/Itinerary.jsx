@@ -36,7 +36,7 @@ function TimelineItem({ item, last }) {
               href={mapsUrl(item.query)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 inline-flex min-h-8 items-center gap-1 text-sm font-medium text-lantern underline-offset-4 hover:underline"
+              className="mt-1 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-lantern underline-offset-4 hover:underline"
             >
               <MapPin size={15} /> {item.place}
             </a>
@@ -51,7 +51,7 @@ function TimelineItem({ item, last }) {
           </p>
         )}
 
-        <div className="mt-3 flex items-start gap-2 rounded-xl border-l-4 border-teal bg-teal/10 px-3 py-2 text-sm text-navy">
+        <div className="mt-3 flex items-start gap-2 rounded-xl border border-teal/40 bg-teal/10 px-3 py-2 text-sm text-navy">
           <Lightbulb size={16} className="mt-0.5 flex-none text-teal" />
           <span><strong>Pro tip:</strong> {item.tip}</span>
         </div>

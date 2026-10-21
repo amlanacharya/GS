@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { hasDishScene, renderDish } from "./FoodScene.jsx";
 
 const SKIES = {
   dawn: ["#3b2a5e", "#c41e3a", "#ff6b35", "#ffd9a0"],
@@ -208,9 +209,10 @@ const scenes = {
   ),
 };
 
-export default function Scene({ kind = "beach", className = "" }) {
+export default function Scene({ kind = "beach", dish, className = "" }) {
   const id = useId().replace(/:/g, "");
   const render = scenes[kind] || scenes.beach;
+  const dishScene = kind === "food" && hasDishScene(dish);
   return (
     <svg
       viewBox="0 0 400 300"
@@ -219,7 +221,15 @@ export default function Scene({ kind = "beach", className = "" }) {
       role="img"
       aria-hidden="true"
     >
-      {render(id)}
+      {dishScene ? (
+        <>
+          <rect width="400" height="300" fill="#ffe9c7" />
+          <rect width="400" height="300" fill="#fff8f0" opacity="0.55" />
+          {renderDish(dish)}
+        </>
+      ) : (
+        render(id)
+      )}
     </svg>
   );
 }
