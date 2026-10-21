@@ -4,8 +4,9 @@ import { ChevronLeft, ChevronRight, Heart, Plus, Trash2 } from "lucide-react";
 import Reveal, { SectionTitle } from "./Reveal.jsx";
 import { NOTES, REASONS, TRIP } from "../data/trip.js";
 import { useLocalStorage } from "../hooks/hooks.js";
+import { releaseLanterns } from "../lib/releaseLantern.js";
 
-function NoteCarousel({ notes }) {
+function NoteCarousel({ notes, jump }) {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
   const count = notes.length;
@@ -16,6 +17,10 @@ function NoteCarousel({ notes }) {
     const id = setInterval(() => setI((v) => v + 1), 5000);
     return () => clearInterval(id);
   }, [paused]);
+
+  useEffect(() => {
+    if (jump.tick > 0) setI(jump.index);
+  }, [jump]);
 
   const go = (d) => setI((v) => (v + d + count) % count);
 
@@ -76,13 +81,17 @@ function ReasonCard({ text }) {
 export default function LoveNotes() {
   const [custom, setCustom] = useLocalStorage("vn-love-notes-v1", []);
   const [draft, setDraft] = useState("");
+  const [jump, setJump] = useState({ tick: 0, index: 0 });
 
   const add = (e) => {
     e.preventDefault();
     const text = draft.trim();
     if (!text) return;
     setCustom((c) => [...c, text]);
+    setJump((j) => ({ tick: j.tick + 1, index: NOTES.length + custom.length }));
     setDraft("");
+    const btn = e.nativeEvent.submitter?.getBoundingClientRect();
+    if (btn) releaseLanterns(btn.left + btn.width / 2, btn.top, 3);
   };
   const remove = (n) => setCustom((c) => c.filter((_, i) => i !== n));
 
@@ -92,7 +101,7 @@ export default function LoveNotes() {
     <section id="notes" className="bg-cream px-4 py-20 sm:py-28">
       <SectionTitle eyebrow="Written from the heart" title="Love Notes" />
 
-      <Reveal><NoteCarousel notes={notes} /></Reveal>
+      <Reveal><NoteCarousel notes={notes} jump={jump} /></Reveal>
 
       <Reveal className="mx-auto mt-14 max-w-5xl">
         <h3 className="mb-6 text-center font-display text-2xl font-bold text-navy sm:text-3xl">Reasons I am excited to travel with you</h3>

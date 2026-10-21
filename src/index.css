@@ -83,6 +83,35 @@ section[id] {
   bottom: -2px;
 }
 
+/* Lanterns released by a tap, note or finished packing list (animated via WAAPI) */
+.wish-lantern {
+  position: fixed;
+  z-index: 40;
+  width: 26px;
+  height: 34px;
+  pointer-events: none;
+  border-radius: 50% / 45%;
+  background: radial-gradient(circle at 50% 40%, #ffd9a0 0%, #ff6b35 45%, #c41e3a 100%);
+  box-shadow: 0 0 22px 6px rgba(255, 107, 53, 0.55);
+  will-change: transform, opacity;
+}
+
+/* Checkbox tick pop */
+@keyframes tickPop {
+  0% {
+    transform: scale(0.4);
+  }
+  60% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.tick-pop {
+  animation: tickPop 0.32s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
 /* Spinning loader lantern */
 @keyframes sway {
   0%,
@@ -159,7 +188,8 @@ section[id] {
     scroll-behavior: auto;
   }
   .lantern,
-  .loader-lantern {
+  .loader-lantern,
+  .tick-pop {
     animation: none;
   }
 }

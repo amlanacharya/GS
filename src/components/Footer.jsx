@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Heart } from "lucide-react";
 import { TRIP } from "../data/trip.js";
 import { CREDITS } from "../data/images.js";
@@ -13,6 +14,8 @@ function VietnamFlag() {
 }
 
 export default function Footer() {
+  const [wished, setWished] = useState(false);
+  const [hinted, setHinted] = useState(false);
   const credited = Object.entries(CREDITS);
 
   return (
@@ -20,9 +23,30 @@ export default function Footer() {
       <p className="font-script text-3xl italic text-gold sm:text-5xl">Bon voyage!</p>
       <p className="mx-auto mt-3 max-w-md text-cream/80">Pack light, hold hands, and let Vietnam do the rest.</p>
       <div className="mt-6 flex items-center justify-center gap-3">
-        <VietnamFlag />
+        <button
+          type="button"
+          onClick={() => {
+            setWished((w) => !w);
+            setHinted(true);
+          }}
+          aria-expanded={wished}
+          aria-label="Flag of Vietnam, tap for a wedding wish"
+          className="flex min-h-11 min-w-11 items-center justify-center"
+        >
+          <VietnamFlag />
+        </button>
         <span className="text-sm tracking-wide">{TRIP.dateLabel}</span>
       </div>
+      {!wished && !hinted && (
+        <p className="mt-1 font-script text-lg italic text-gold/90" aria-hidden="true">
+          &uarr; tap the flag for a special wish
+        </p>
+      )}
+      {wished && (
+        <p className="mt-4 font-script text-xl italic text-gold" role="status">
+          Trăm năm hạnh phúc. A hundred years of happiness.
+        </p>
+      )}
       <p className="mt-8 inline-flex items-center gap-2 text-sm">
         Made with <Heart size={16} className="text-lantern" fill="currentColor" aria-label="love" /> for {TRIP.first} &amp; {TRIP.second}
       </p>

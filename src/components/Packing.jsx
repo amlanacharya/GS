@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Camera, Check, ChevronDown, Droplets, Gem, Shirt, Smartphone } from "lucide-react";
 import Reveal, { SectionTitle } from "./Reveal.jsx";
 import { PACKING } from "../data/trip.js";
 import { useLocalStorage } from "../hooks/hooks.js";
+import { releaseLanterns } from "../lib/releaseLantern.js";
 
 const ICONS = { shirt: Shirt, camera: Camera, droplets: Droplets, smartphone: Smartphone, gem: Gem };
 
@@ -14,6 +15,16 @@ export default function Packing() {
   const all = PACKING.flatMap((g) => g.items.map((it) => `${g.cat}:${it}`));
   const done = all.filter((k) => checked[k]).length;
   const pct = Math.round((done / all.length) * 100);
+
+  const barRef = useRef(null);
+  const wasDone = useRef(pct === 100);
+  useEffect(() => {
+    if (pct === 100 && !wasDone.current && barRef.current) {
+      const r = barRef.current.getBoundingClientRect();
+      releaseLanterns(r.left + r.width / 2, r.top, 7);
+    }
+    wasDone.current = pct === 100;
+  }, [pct]);
 
   const toggle = (key) => setChecked((c) => ({ ...c, [key]: !c[key] }));
   const toggleGroup = (cat) => setCollapsed((c) => ({ ...c, [cat]: !c[cat] }));
@@ -27,10 +38,10 @@ export default function Packing() {
           <p className="font-display text-lg font-bold text-navy">{pct}% packed</p>
           <p className="text-sm text-navy/70">{done} of {all.length} items</p>
         </div>
-        <div className="mt-2 h-4 overflow-hidden rounded-full bg-navy/10" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Packing progress">
+        <div ref={barRef} className="mt-2 h-4 overflow-hidden rounded-full bg-navy/10" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Packing progress">
           <motion.div className="h-full rounded-full bg-gradient-to-r from-teal to-gold" animate={{ width: `${pct}%` }} transition={{ type: "spring", stiffness: 90, damping: 18 }} />
         </div>
-        {pct === 100 && <p className="mt-3 text-center font-script text-2xl italic text-lantern">All packed. Time to fly!</p>}
+        {pct === 100 && <p className="mt-3 text-center font-script text-2xl italic text-lantern">All packed. The lanterns are waiting.</p>}
       </div>
 
       <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
@@ -58,7 +69,7 @@ export default function Packing() {
                             <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl px-2 py-1 hover:bg-cream">
                               <input type="checkbox" checked={on} onChange={() => toggle(key)} className="peer sr-only" />
                               <span className={`flex h-6 w-6 flex-none items-center justify-center rounded-md border-2 transition peer-focus-visible:ring-4 peer-focus-visible:ring-teal/40 ${on ? "border-teal bg-teal text-white" : "border-gold bg-white"}`}>
-                                {on && <Check size={16} strokeWidth={3} />}
+                                {on && <Check size={16} strokeWidth={3} className="tick-pop" />}
                               </span>
                               <span className={`text-sm transition ${on ? "text-navy/40 line-through" : "text-navy"}`}>{it}</span>
                             </label>

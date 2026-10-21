@@ -5,6 +5,7 @@ import Photo from "./Photo.jsx";
 import { TRIP } from "../data/trip.js";
 import { HERO_ID } from "../data/images.js";
 import { useCountdown } from "../hooks/hooks.js";
+import { releaseLantern } from "../lib/releaseLantern.js";
 
 function Unit({ value, label }) {
   return (
@@ -15,6 +16,12 @@ function Unit({ value, label }) {
       <span className="mt-1 text-[10px] uppercase tracking-widest text-gold sm:text-xs">{label}</span>
     </div>
   );
+}
+
+function sleepsLine(days) {
+  if (days === 0) return "Tonight is your last sleep at home. Pack the sunscreen.";
+  if (days === 1) return "One more sleep until Da Nang.";
+  return `${days} sleeps until Da Nang.`;
 }
 
 export default function Hero() {
@@ -35,7 +42,14 @@ export default function Hero() {
   );
 
   return (
-    <section id="top" className="relative flex min-h-screen items-center justify-center overflow-hidden bg-navy">
+    <section
+      id="top"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-navy"
+      onClick={(e) => {
+        if (e.target.closest("a, button")) return;
+        releaseLantern(e.clientX, e.clientY);
+      }}
+    >
       <motion.div style={{ y: bgY }} className="absolute inset-0 -top-10 h-[115%]">
         <Photo id={HERO_ID} alt="Da Nang beach at sunset" kind="beach" className="h-full w-full" eager />
       </motion.div>
@@ -87,12 +101,15 @@ export default function Hero() {
           {time.done ? (
             <p className="font-display text-2xl text-gold">The adventure has begun.</p>
           ) : (
-            <div className="flex justify-center gap-2 sm:gap-4" role="timer" aria-label="Countdown to the trip">
-              <Unit value={time.days} label="Days" />
-              <Unit value={time.hours} label="Hours" />
-              <Unit value={time.minutes} label="Mins" />
-              <Unit value={time.seconds} label="Secs" />
-            </div>
+            <>
+              <div className="flex justify-center gap-2 sm:gap-4" role="timer" aria-label="Countdown to the trip">
+                <Unit value={time.days} label="Days" />
+                <Unit value={time.hours} label="Hours" />
+                <Unit value={time.minutes} label="Mins" />
+                <Unit value={time.seconds} label="Secs" />
+              </div>
+              <p className="mt-5 font-script text-lg italic text-cream/90 sm:text-2xl">{sleepsLine(time.days)}</p>
+            </>
           )}
         </motion.div>
       </motion.div>
