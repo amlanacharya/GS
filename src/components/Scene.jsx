@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { hasDishScene, renderDish } from "./FoodScene.jsx";
+import { eventScenes } from "./EventScene.jsx";
 
 const SKIES = {
   dawn: ["#3b2a5e", "#c41e3a", "#ff6b35", "#ffd9a0"],
@@ -211,7 +212,7 @@ const scenes = {
 
 export default function Scene({ kind = "beach", dish, className = "" }) {
   const id = useId().replace(/:/g, "");
-  const render = scenes[kind] || scenes.beach;
+  const render = scenes[kind] || eventScenes[kind] || scenes.beach;
   const dishScene = kind === "food" && hasDishScene(dish);
   return (
     <svg

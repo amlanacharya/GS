@@ -229,6 +229,169 @@ const dishes = {
       ]}
     />
   ),
+  // Ba Na lunch: grilled meat skewers on a wooden board, sticky rice, lettuce, dipping sauce
+  "ba-na-lunch": () => (
+    <>
+      <ellipse cx="200" cy="238" rx="150" ry="12" fill="#1a1a2e" opacity="0.14" />
+      <rect x="62" y="140" width="276" height="92" rx="18" fill="#a8702e" />
+      <rect x="62" y="140" width="276" height="84" rx="18" fill="#c48a4a" />
+      <path d="M80 160 H320 M80 190 H320" stroke="#a8702e" strokeWidth="2" opacity="0.5" />
+      <path d="M96 176 Q 88 152 114 156 Q 134 140 150 160 Q 160 176 138 184Z" fill="#3f9a5a" />
+      <path d="M118 200 Q 108 178 134 182 Q 156 170 170 190 Q 176 208 150 212Z" fill="#6fbf73" />
+      {[162, 182, 202].map((y, i) => (
+        <g key={i}>
+          <line x1="150" y1={y} x2="268" y2={y - 4} stroke="#8c3a1e" strokeWidth="3" strokeLinecap="round" />
+          {[178, 202, 226, 250].map((x, j) => (
+            <rect
+              key={j}
+              x={x - 11}
+              y={y - 11 - (x - 150) / 30}
+              width="22"
+              height="18"
+              rx="7"
+              fill={j % 2 ? "#7d4524" : "#6b3a1e"}
+            />
+          ))}
+          <path d={`M170 ${y - 4} l6 6 M214 ${y - 8} l6 6`} stroke="#2a1608" strokeWidth="2" strokeLinecap="round" />
+        </g>
+      ))}
+      <path d="M262 168 H 326 Q 322 206 294 208 Q 266 206 262 168Z" fill="#2f5d62" />
+      <ellipse cx="294" cy="168" rx="32" ry="9" fill="#fff8f0" />
+      <path d="M268 166 Q 294 148 320 166 Q 294 174 268 166Z" fill="#fdfbf6" />
+      <ellipse cx="304" cy="216" rx="24" ry="8" fill="#fff8f0" />
+      <ellipse cx="304" cy="214" rx="18" ry="5" fill="#c41e3a" />
+      <Steam x={210} />
+    </>
+  ),
+  // River dinner: whole grilled fish on banana leaf, lime, chilli, herbs, rice cup
+  "river-dinner": () => (
+    <>
+      <ellipse cx="200" cy="238" rx="150" ry="12" fill="#1a1a2e" opacity="0.14" />
+      <ellipse cx="190" cy="190" rx="142" ry="46" fill="#2f7d46" />
+      <path d="M52 192 Q 190 184 328 192" stroke="#6fbf73" strokeWidth="3" fill="none" />
+      <path d="M254 168 L 306 148 Q 300 184 310 218 L 254 196Z" fill="#c4863a" />
+      <path d="M100 186 Q 110 150 190 150 Q 250 152 262 184 Q 250 220 190 222 Q 110 222 100 186Z" fill="#d9a15a" />
+      <path d="M150 154 Q 190 130 232 156Z" fill="#c4863a" />
+      <path d="M130 170 L 146 210 M162 160 L 178 216 M196 158 L 212 218 M230 164 L 240 208" stroke="#6b3a1e" strokeWidth="5" strokeLinecap="round" opacity="0.7" />
+      <circle cx="124" cy="182" r="7" fill="#fff8f0" />
+      <circle cx="123" cy="182" r="3.5" fill="#1a1a2e" />
+      <path d="M104 196 Q 116 204 130 198" stroke="#8c3a1e" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M170 176 Q 190 168 214 176" stroke="#3f9a5a" strokeWidth="6" fill="none" strokeLinecap="round" />
+      <path d="M176 198 Q 202 206 232 196" stroke="#c41e3a" strokeWidth="6" fill="none" strokeLinecap="round" />
+      <g>
+        <path d="M70 220 A 22 22 0 0 1 114 220Z" fill="#8cc63f" />
+        <path d="M77 218 A 15 15 0 0 1 107 218Z" fill="#d6ec8a" />
+        <path d="M118 226 A 18 18 0 0 1 154 226Z" fill="#8cc63f" />
+        <path d="M124 224 A 12 12 0 0 1 148 224Z" fill="#d6ec8a" />
+      </g>
+      <path d="M296 176 H 348 Q 344 214 322 216 Q 300 214 296 176Z" fill="#c41e3a" />
+      <ellipse cx="322" cy="176" rx="26" ry="8" fill="#fff8f0" />
+      <circle cx="312" cy="174" r="2.5" fill="#e5d3b8" />
+      <circle cx="326" cy="172" r="2.5" fill="#e5d3b8" />
+      <Steam x={190} />
+    </>
+  ),
+  // Lang Co: grilled shellfish on a tray with scallion oil, lemon and salt-pepper-lime dip
+  "lang-co": () => (
+    <>
+      <ellipse cx="200" cy="238" rx="150" ry="12" fill="#1a1a2e" opacity="0.14" />
+      <ellipse cx="200" cy="192" rx="152" ry="52" fill="#9ea3ad" />
+      <ellipse cx="200" cy="188" rx="140" ry="44" fill="#d0d4da" />
+      {[
+        [120, 176],
+        [176, 164],
+        [234, 170],
+        [148, 206],
+        [206, 202],
+        [264, 204],
+      ].map(([x, y], i) => (
+        <g key={i} transform={`rotate(${i % 2 ? 8 : -8} ${x} ${y})`}>
+          <ellipse cx={x} cy={y} rx="30" ry="19" fill="#4b5a68" />
+          <ellipse cx={x} cy={y} rx="25" ry="15" fill="#fff8f0" />
+          <ellipse cx={x} cy={y + 1} rx="17" ry="9" fill="#f2b8a8" />
+          <path d={`M${x - 14} ${y} Q ${x} ${y - 8} ${x + 14} ${y}`} stroke="#6fbf73" strokeWidth="4" fill="none" strokeLinecap="round" />
+          <circle cx={x + 8} cy={y + 2} r="2.5" fill="#3f9a5a" />
+        </g>
+      ))}
+      <path d="M72 214 A 26 26 0 0 1 124 214Z" fill="#f6d84a" />
+      <path d="M80 212 A 18 18 0 0 1 116 212Z" fill="#fbeb8a" />
+      <ellipse cx="316" cy="178" rx="30" ry="14" fill="#fff8f0" stroke="#e5d3b8" strokeWidth="2" />
+      <ellipse cx="316" cy="177" rx="21" ry="8" fill="#f6efe2" />
+      <circle cx="308" cy="176" r="3" fill="#1a1a2e" opacity="0.7" />
+      <circle cx="318" cy="180" r="3" fill="#1a1a2e" opacity="0.7" />
+      <circle cx="324" cy="174" r="3.5" fill="#8cc63f" />
+      <Steam x={190} />
+    </>
+  ),
+  // Morning Glory: garlicky water-spinach stir-fry, two crisp spring rolls, dipping sauce
+  "morning-glory": () => (
+    <>
+      <ellipse cx="200" cy="238" rx="150" ry="12" fill="#1a1a2e" opacity="0.14" />
+      <ellipse cx="160" cy="194" rx="112" ry="42" fill="#fff8f0" stroke="#e5d3b8" strokeWidth="3" />
+      <ellipse cx="160" cy="190" rx="86" ry="28" fill="#f6efe2" />
+      <g stroke="#3f9a5a" strokeWidth="7" fill="none" strokeLinecap="round">
+        <path d="M92 190 Q 126 168 164 188 T 228 180" />
+        <path d="M100 200 Q 138 184 176 204 T 226 196" />
+        <path d="M112 182 Q 150 164 190 176" />
+      </g>
+      <g fill="#6fbf73">
+        <ellipse cx="108" cy="178" rx="13" ry="7" transform="rotate(-30 108 178)" />
+        <ellipse cx="170" cy="168" rx="13" ry="7" transform="rotate(20 170 168)" />
+        <ellipse cx="214" cy="200" rx="13" ry="7" transform="rotate(-15 214 200)" />
+        <ellipse cx="140" cy="206" rx="12" ry="6" transform="rotate(10 140 206)" />
+      </g>
+      <g fill="#d4a574">
+        <ellipse cx="132" cy="186" rx="4" ry="2.5" />
+        <ellipse cx="186" cy="190" rx="4" ry="2.5" />
+        <ellipse cx="156" cy="198" rx="4" ry="2.5" />
+        <ellipse cx="206" cy="184" rx="4" ry="2.5" />
+      </g>
+      <g transform="rotate(-18 296 160)">
+        <rect x="256" y="148" width="84" height="26" rx="13" fill="#d9903a" />
+        <path d="M268 156 H 328 M266 166 H 330" stroke="#a8601e" strokeWidth="3" strokeLinecap="round" />
+        <circle cx="338" cy="161" r="6" fill="#f6d77a" />
+      </g>
+      <g transform="rotate(-6 296 196)">
+        <rect x="256" y="184" width="84" height="26" rx="13" fill="#e0a24a" />
+        <path d="M268 192 H 328 M266 202 H 330" stroke="#a8601e" strokeWidth="3" strokeLinecap="round" />
+        <circle cx="338" cy="197" r="6" fill="#f6d77a" />
+      </g>
+      <path d="M262 218 H 322 Q 318 240 292 242 Q 266 240 262 218Z" fill="#2f5d62" />
+      <ellipse cx="292" cy="218" rx="30" ry="8" fill="#ff6b35" />
+      <ellipse cx="292" cy="217" rx="22" ry="5" fill="#c41e3a" />
+      <Steam x={150} />
+    </>
+  ),
+  // Son Tra brunch: sunny plate, tropical fruit bowl, croissant, flat white, honey jar
+  "son-tra-brunch": () => (
+    <>
+      <ellipse cx="200" cy="238" rx="150" ry="12" fill="#1a1a2e" opacity="0.14" />
+      <ellipse cx="200" cy="196" rx="152" ry="46" fill="#ffe3a0" />
+      <ellipse cx="200" cy="192" rx="138" ry="38" fill="#fff8f0" />
+      <path d="M82 158 H 184 Q 180 204 133 206 Q 86 204 82 158Z" fill="#2ec4b6" />
+      <ellipse cx="133" cy="158" rx="51" ry="11" fill="#1f9d92" />
+      <circle cx="108" cy="152" r="15" fill="#ff8a3d" />
+      <circle cx="136" cy="146" r="16" fill="#e8467c" />
+      <circle cx="160" cy="154" r="14" fill="#f6c431" />
+      <g fill="#1a1a2e">
+        <circle cx="130" cy="143" r="1.8" />
+        <circle cx="140" cy="149" r="1.8" />
+        <circle cx="143" cy="141" r="1.8" />
+        <circle cx="112" cy="156" r="1.8" />
+        <circle cx="104" cy="149" r="1.8" />
+      </g>
+      <rect x="206" y="138" width="34" height="34" rx="8" fill="#f0b429" />
+      <rect x="203" y="132" width="40" height="12" rx="5" fill="#8c3a1e" />
+      <rect x="213" y="148" width="20" height="14" rx="4" fill="#fff8f0" opacity="0.8" />
+      <path d="M196 214 Q 214 178 258 184 Q 290 192 282 218 Q 270 206 258 210 Q 238 200 218 222 Q 204 224 196 214Z" fill="#d9903a" />
+      <path d="M222 190 L 230 210 M240 186 L 246 206 M258 188 L 262 206" stroke="#a8601e" strokeWidth="3" strokeLinecap="round" />
+      <ellipse cx="312" cy="196" rx="36" ry="12" fill="#fff8f0" stroke="#e5d3b8" strokeWidth="2" />
+      <path d="M292 158 H 332 Q 330 192 312 194 Q 294 192 292 158Z" fill="#fff8f0" stroke="#e5d3b8" strokeWidth="2" />
+      <path d="M332 166 Q 350 166 346 178 Q 342 188 328 184" stroke="#fff8f0" strokeWidth="5" fill="none" strokeLinecap="round" />
+      <ellipse cx="312" cy="158" rx="20" ry="5" fill="#8c5a2e" />
+      <path d="M312 160 q -7 -6 0 -2 q 7 -4 0 2Z" fill="#fff8f0" />
+    </>
+  ),
 };
 
 export const hasDishScene = (id) => Object.prototype.hasOwnProperty.call(dishes, id);
