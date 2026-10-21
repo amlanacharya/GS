@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: #fff8f0;
+  color: #1a1a2e;
+  font-family: Inter, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: #d4a574;
+  color: #1a1a2e;
+}
+
+:focus-visible {
+  outline: 3px solid #2ec4b6;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+section[id] {
+  scroll-margin-top: 72px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Floating lanterns in the hero */
+@keyframes floatUp {
+  0% {
+    transform: translate3d(0, 20vh, 0) rotate(-4deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate3d(18px, -40vh, 0) rotate(4deg);
+  }
+  100% {
+    transform: translate3d(-12px, -110vh, 0) rotate(-3deg);
+    opacity: 0;
+  }
+}
+
+.lantern {
+  position: absolute;
+  bottom: -60px;
+  width: 26px;
+  height: 34px;
+  border-radius: 50% / 45%;
+  background: radial-gradient(circle at 50% 40%, #ffd9a0 0%, #ff6b35 45%, #c41e3a 100%);
+  box-shadow: 0 0 22px 6px rgba(255, 107, 53, 0.55);
+  animation: floatUp linear infinite;
+  will-change: transform;
+}
+.lantern::before,
+.lantern::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  height: 3px;
+  background: #d4a574;
+  transform: translateX(-50%);
+}
+.lantern::before {
+  top: -2px;
+}
+.lantern::after {
+  bottom: -2px;
+}
+
+/* Spinning loader lantern */
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 26px rgba(255, 107, 53, 0.95));
+  }
+}
+.loader-lantern {
+  transform-origin: top center;
+  animation: sway 2s ease-in-out infinite, pulse-glow 2s ease-in-out infinite;
+}
+
+/* Masonry */
+.masonry {
+  column-count: 2;
+  column-gap: 12px;
+}
+@media (min-width: 768px) {
+  .masonry {
+    column-count: 3;
+    column-gap: 16px;
+  }
+}
+@media (min-width: 1280px) {
+  .masonry {
+    column-count: 4;
+  }
+}
+.masonry > * {
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+@media (min-width: 768px) {
+  .masonry > * {
+    margin-bottom: 16px;
+  }
+}
+
+/* Hearts that rise on hover */
+@keyframes heartRise {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-70px) scale(1.2);
+    opacity: 0;
+  }
+}
+.heart-hover .heart-float {
+  opacity: 0;
+}
+.heart-hover:hover .heart-float {
+  animation: heartRise 1.1s ease-out infinite;
+}
+
+/* Leaflet tweaks */
+.leaflet-container {
+  font-family: Inter, system-ui, sans-serif;
+  background: #cfe9ee;
+}
+.pin {
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  background: #c41e3a;
+  transform: rotate(-45deg);
+  border: 3px solid #fff8f0;
+  box-shadow: 0 6px 14px rgba(26, 26, 46, 0.4);
+}
+.pin::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: #fff8f0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .lantern,
+  .loader-lantern {
+    animation: none;
+  }
+}
