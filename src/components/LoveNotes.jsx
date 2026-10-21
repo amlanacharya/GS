@@ -1,22 +1,36 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Heart, Plus, Trash2 } from "lucide-react";
-import Reveal, { SectionTitle } from "./Reveal.jsx";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ChevronLeft, ChevronRight, Heart, Pause, Play, Plus, Trash2 } from "lucide-react";
+import Reveal from "./Reveal.jsx";
 import { NOTES, REASONS, TRIP } from "../data/trip.js";
 import { useLocalStorage } from "../hooks/hooks.js";
 import { releaseLanterns } from "../lib/releaseLantern.js";
 
 function NoteCarousel({ notes, jump }) {
   const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [touching, setTouching] = useState(false);
+  const [hidden, setHidden] = useState(
+    typeof document !== "undefined" && document.hidden
+  );
+  const reduce = useReducedMotion();
   const count = notes.length;
   const idx = i % count;
+  const playing = !reduce && !userPaused && !hovered && !focused && !touching && !hidden;
 
   useEffect(() => {
-    if (paused) return undefined;
+    const onVisibility = () => setHidden(document.hidden);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, []);
+
+  useEffect(() => {
+    if (!playing) return undefined;
     const id = setInterval(() => setI((v) => v + 1), 5000);
     return () => clearInterval(id);
-  }, [paused]);
+  }, [playing]);
 
   useEffect(() => {
     if (jump.tick > 0) setI(jump.index);
@@ -26,12 +40,18 @@ function NoteCarousel({ notes, jump }) {
 
   return (
     <div
-      className="relative mx-auto max-w-3xl rounded-3xl bg-gradient-to-br from-lantern to-sunset px-6 py-14 text-center text-cream shadow-lift sm:px-16"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      className="relative max-w-4xl text-cream"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false);
+      }}
+      onPointerDown={() => setTouching(true)}
+      onPointerUp={() => setTouching(false)}
+      onPointerCancel={() => setTouching(false)}
     >
-      <Heart className="mx-auto text-gold" size={28} fill="currentColor" />
-      <div className="mt-4 min-h-[8rem] sm:min-h-[7rem]" aria-live="polite">
+      <div className="min-h-[9rem] sm:min-h-[8rem]" aria-live={playing ? "off" : "polite"}>
         <AnimatePresence mode="wait">
           <motion.p
             key={idx}
@@ -45,13 +65,13 @@ function NoteCarousel({ notes, jump }) {
               if (info.offset.x < -60) go(1);
               if (info.offset.x > 60) go(-1);
             }}
-            className="font-script text-2xl italic leading-snug sm:text-4xl"
+            className="font-script text-3xl italic leading-snug sm:text-5xl"
           >
             {notes[idx]}
           </motion.p>
         </AnimatePresence>
       </div>
-      <div className="mt-6 flex items-center justify-center gap-3">
+      <div className="mt-6 flex flex-wrap items-center gap-3">
         <button type="button" onClick={() => go(-1)} aria-label="Previous note" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/20"><ChevronLeft size={22} /></button>
         <div className="flex gap-1.5">
           {notes.map((_, n) => (
@@ -59,21 +79,27 @@ function NoteCarousel({ notes, jump }) {
           ))}
         </div>
         <button type="button" onClick={() => go(1)} aria-label="Next note" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/20"><ChevronRight size={22} /></button>
+        {!reduce && (
+          <button
+            type="button"
+            onClick={() => setUserPaused((v) => !v)}
+            aria-pressed={userPaused}
+            aria-label="Pause automatic rotation"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/20"
+          >
+            {userPaused ? <Play size={20} /> : <Pause size={20} />}
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
-function ReasonCard({ text }) {
+function Reason({ text }) {
   return (
-    <li className="heart-hover relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gold/25 transition duration-300 hover:-translate-y-1 hover:shadow-lift">
-      <span className="absolute bottom-3 right-4 flex gap-1 text-lantern" aria-hidden="true">
-        <Heart size={14} fill="currentColor" className="heart-float" />
-        <Heart size={18} fill="currentColor" className="heart-float" style={{ animationDelay: "0.25s" }} />
-        <Heart size={12} fill="currentColor" className="heart-float" style={{ animationDelay: "0.5s" }} />
-      </span>
-      <Heart size={18} className="text-lantern" fill="currentColor" />
-      <p className="mt-2 font-script text-xl leading-snug text-navy">{text}</p>
+    <li className="flex break-inside-avoid gap-3 py-2">
+      <Heart size={16} className="mt-2 flex-none text-lantern" fill="currentColor" aria-hidden="true" />
+      <p className="font-script text-xl leading-snug text-navy sm:text-2xl">{text}</p>
     </li>
   );
 }
@@ -98,20 +124,27 @@ export default function LoveNotes() {
   const notes = [...NOTES, ...custom];
 
   return (
-    <section id="notes" className="bg-cream px-4 py-20 sm:py-28">
-      <SectionTitle eyebrow="Written from the heart" title="Love Notes" />
+    <section id="notes">
+      <div className="bg-gradient-to-br from-lantern to-ember px-4 py-20 text-cream sm:py-28">
+        <div className="mx-auto max-w-6xl">
+          <Reveal className="mb-10 max-w-2xl sm:mb-12">
+            <p className="font-script text-xl italic text-cream sm:text-2xl">Written from the heart</p>
+            <h2 className="mt-1 font-display text-3xl font-bold sm:text-5xl">Love Notes</h2>
+          </Reveal>
+          <Reveal><NoteCarousel notes={notes} jump={jump} /></Reveal>
+        </div>
+      </div>
 
-      <Reveal><NoteCarousel notes={notes} jump={jump} /></Reveal>
+      <div className="bg-cream px-4 py-16 sm:py-24">
+        <Reveal className="mx-auto max-w-6xl">
+          <h3 className="mb-6 font-display text-2xl font-bold text-navy sm:text-3xl">Reasons I am excited to travel with you</h3>
+          <ul className="gap-x-12 sm:columns-2">
+            {REASONS.map((r) => <Reason key={r} text={r} />)}
+          </ul>
+        </Reveal>
 
-      <Reveal className="mx-auto mt-14 max-w-5xl">
-        <h3 className="mb-6 text-center font-display text-2xl font-bold text-navy sm:text-3xl">Reasons I am excited to travel with you</h3>
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {REASONS.map((r) => <ReasonCard key={r} text={r} />)}
-        </ul>
-      </Reveal>
-
-      <Reveal className="mx-auto mt-14 max-w-2xl">
-        <div className="rounded-3xl border-2 border-dashed border-gold bg-white p-6">
+      <Reveal className="mx-auto mt-14 max-w-6xl">
+        <div className="max-w-2xl border-t border-gold/50 pt-6">
           <h3 className="font-display text-xl font-bold text-navy">Add a note for {TRIP.second}</h3>
           <p className="text-sm text-navy/70">Saved on this device and added to the carousel above.</p>
           <form onSubmit={add} className="mt-4 flex flex-col gap-3 sm:flex-row">
@@ -122,7 +155,7 @@ export default function LoveNotes() {
               onChange={(e) => setDraft(e.target.value)}
               maxLength={160}
               placeholder="Write something sweet..."
-              className="min-h-12 flex-1 rounded-xl border border-gold/50 bg-cream px-4 text-navy placeholder:text-navy/40"
+              className="min-h-12 flex-1 rounded-xl border border-gold/50 bg-cream px-4 text-navy placeholder:text-navy/60"
             />
             <button type="submit" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-lantern px-6 font-semibold text-cream transition hover:bg-lantern/90">
               <Plus size={18} /> Add
@@ -140,6 +173,7 @@ export default function LoveNotes() {
           )}
         </div>
       </Reveal>
+      </div>
     </section>
   );
 }

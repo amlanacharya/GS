@@ -30,7 +30,7 @@ export default function Packing() {
   const toggleGroup = (cat) => setCollapsed((c) => ({ ...c, [cat]: !c[cat] }));
 
   return (
-    <section id="packing" className="bg-gradient-to-b from-[#fdeedd] to-cream px-4 py-20 sm:py-28">
+    <section id="packing" className="bg-gradient-to-b from-[#fdeedd] to-cream px-4 pb-16 pt-14 sm:pb-20 sm:pt-20">
       <SectionTitle eyebrow="Do not forget a thing" title="Packing Checklist" />
 
       <div className="mx-auto mb-10 max-w-3xl">
@@ -44,18 +44,18 @@ export default function Packing() {
         {pct === 100 && <p className="mt-3 text-center font-script text-2xl italic text-lantern">All packed. The lanterns are waiting.</p>}
       </div>
 
-      <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
+      <div className="mx-auto grid max-w-5xl gap-x-14 gap-y-8 md:grid-cols-2">
         {PACKING.map((g, gi) => {
           const Icon = ICONS[g.icon];
           const isCollapsed = collapsed[g.cat];
           const groupDone = g.items.filter((it) => checked[`${g.cat}:${it}`]).length;
           return (
-            <Reveal key={g.cat} delay={(gi % 2) * 0.1} className={gi === PACKING.length - 1 && PACKING.length % 2 ? "md:col-span-2" : ""}>
-              <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-gold/25">
+            <Reveal key={g.cat} delay={(gi % 2) * 0.1}>
+              <div className="border-t border-gold/50 pt-2">
                 <button type="button" onClick={() => toggleGroup(g.cat)} aria-expanded={!isCollapsed} className="flex min-h-12 w-full items-center gap-3 text-left">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gold/20 text-lantern"><Icon size={20} /></span>
+                  <span className="flex h-10 w-10 items-center justify-center text-lantern"><Icon size={20} /></span>
                   <span className="flex-1 font-display text-lg font-bold text-navy">{g.cat}</span>
-                  <span className="text-xs font-semibold text-teal">{groupDone}/{g.items.length}</span>
+                  <span className="text-xs font-semibold text-tealInk">{groupDone}/{g.items.length}</span>
                   <ChevronDown size={20} className={`text-navy/60 transition ${isCollapsed ? "" : "rotate-180"}`} />
                 </button>
                 <AnimatePresence initial={false}>
@@ -65,13 +65,13 @@ export default function Packing() {
                         const key = `${g.cat}:${it}`;
                         const on = Boolean(checked[key]);
                         return (
-                          <li key={key}>
-                            <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl px-2 py-1 hover:bg-cream">
+                          <li key={key} className="border-b border-gold/25 last:border-0">
+                            <label className="flex min-h-11 cursor-pointer items-center gap-3 px-1 py-1 hover:bg-gold/10">
                               <input type="checkbox" checked={on} onChange={() => toggle(key)} className="peer sr-only" />
-                              <span className={`flex h-6 w-6 flex-none items-center justify-center rounded-md border-2 transition peer-focus-visible:ring-4 peer-focus-visible:ring-teal/40 ${on ? "border-teal bg-teal text-white" : "border-gold bg-white"}`}>
+                              <span className={`flex h-6 w-6 flex-none items-center justify-center rounded-md border-2 transition peer-focus-visible:ring-4 peer-focus-visible:ring-teal/40 ${on ? "border-teal bg-teal text-navy" : "border-gold bg-white"}`}>
                                 {on && <Check size={16} strokeWidth={3} className="tick-pop" />}
                               </span>
-                              <span className={`text-sm transition ${on ? "text-navy/40 line-through" : "text-navy"}`}>{it}</span>
+                              <span className={`text-sm transition ${on ? "text-navy/60 line-through" : "text-navy"}`}>{it}</span>
                             </label>
                           </li>
                         );

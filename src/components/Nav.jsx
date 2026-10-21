@@ -5,10 +5,10 @@ import { Menu, X } from "lucide-react";
 const LINKS = [
   ["overview", "Overview"],
   ["itinerary", "Itinerary"],
-  ["gallery", "Gallery"],
+  ["notes", "Love Notes"],
+  ["gallery", "Scenes"],
   ["food", "Food"],
   ["packing", "Packing"],
-  ["notes", "Love Notes"],
 ];
 
 export default function Nav() {
@@ -29,7 +29,7 @@ export default function Nav() {
       }`}
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6" aria-label="Main">
-        <a href="#top" className="inline-flex min-h-11 items-center font-display text-lg font-bold text-cream">
+        <a href="#top" className="inline-flex min-h-11 min-w-11 items-center font-display text-lg font-bold text-cream">
           G <span className="text-gold">&amp;</span> S
         </a>
 

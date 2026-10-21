@@ -108,7 +108,7 @@ export default function Hero() {
                 <Unit value={time.minutes} label="Mins" />
                 <Unit value={time.seconds} label="Secs" />
               </div>
-              <p className="mt-5 text-balance font-script text-lg italic text-cream sm:text-2xl drop-shadow">{sleepsLine(time.days)}</p>
+              <p className="mx-auto mt-5 w-fit rounded-full bg-navy/40 px-4 py-1 text-balance font-script text-lg italic font-semibold text-cream sm:text-2xl drop-shadow-lg">{sleepsLine(time.days)}</p>
             </>
           )}
         </motion.div>

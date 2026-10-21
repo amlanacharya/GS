@@ -15,12 +15,14 @@ export default {
         teal: "#2EC4B6",
         cream: "#FFF8F0",
         sunset: "#FF6B35",
+        tealInk: "#0B7A70",
+        ember: "#B8400F",
         navy: "#1A1A2E",
       },
       fontFamily: {
         display: ['"Playfair Display"', "Georgia", "serif"],
         script: ['"Cormorant Garamond"', "Georgia", "serif"],
-        body: ["Inter", "system-ui", "sans-serif"],
+        body: ['"Nunito Sans"', "system-ui", "-apple-system", "\"Segoe UI\"", "Roboto", "sans-serif"],
       },
       boxShadow: {
         lift: "0 24px 48px -16px rgba(26,26,46,0.28)",

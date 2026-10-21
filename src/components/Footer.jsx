@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart } from "lucide-react";
+import { ArrowUp, Heart } from "lucide-react";
 import { TRIP } from "../data/trip.js";
 import { CREDITS } from "../data/images.js";
 import { PHOTO_SEARCH } from "../data/photoSearch.js";
@@ -50,6 +50,13 @@ export default function Footer() {
       <p className="mt-8 inline-flex items-center gap-2 text-sm">
         Made with <Heart size={16} className="text-lantern" fill="currentColor" aria-label="love" /> for {TRIP.first} &amp; {TRIP.second}
       </p>
+
+      <a
+        href="#top"
+        className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-sm font-semibold text-gold underline-offset-4 hover:bg-white/10 hover:underline"
+      >
+        <ArrowUp size={16} aria-hidden="true" /> Back to top
+      </a>
 
       {credited.length > 0 && (
         <details className="mx-auto mt-8 max-w-2xl text-left text-xs text-cream/60">

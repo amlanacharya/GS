@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import Photo from "./Photo.jsx";
@@ -9,8 +9,6 @@ const FILTERS = [
   ["all", "All"],
   ["da-nang", "Da Nang"],
   ["hoi-an", "Hoi An"],
-  ["food", "Food"],
-  ["beach", "Beach"],
 ];
 
 const RATIO = { tall: "aspect-[3/4]", wide: "aspect-[4/3]", square: "aspect-square" };
@@ -19,9 +17,35 @@ const creditLine = (p) => (CREDITS[p.id] ? `Photo: ${CREDITS[p.id]}` : "");
 
 function Lightbox({ items, index, onClose, onMove }) {
   const item = items[index];
+  const dialogRef = useRef(null);
+  const closeRef = useRef(null);
+
+  // Move focus into the dialog on open and restore it to the opener on close.
+  useEffect(() => {
+    const opener = document.activeElement;
+    closeRef.current?.focus();
+    return () => {
+      if (opener instanceof HTMLElement && opener.isConnected) opener.focus();
+    };
+  }, []);
 
   useEffect(() => {
     const onKey = (e) => {
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll("button:not([disabled])");
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const inside = dialogRef.current.contains(document.activeElement);
+        if (e.shiftKey && (document.activeElement === first || !inside)) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && (document.activeElement === last || !inside)) {
+          e.preventDefault();
+          first.focus();
+        }
+        return;
+      }
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowRight") onMove(1);
       if (e.key === "ArrowLeft") onMove(-1);
@@ -40,18 +64,19 @@ function Lightbox({ items, index, onClose, onMove }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={item.caption}
       onClick={onClose}
     >
-      <button type="button" onClick={onClose} aria-label="Close" className="absolute right-4 top-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-cream">
+      <button ref={closeRef} type="button" onClick={onClose} aria-label="Close" className="absolute right-4 top-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-cream">
         <X size={26} />
       </button>
-      <button type="button" onClick={(e) => { e.stopPropagation(); onMove(-1); }} aria-label="Previous photo" className="absolute left-2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-cream sm:left-6">
+      <button type="button" onClick={(e) => { e.stopPropagation(); onMove(-1); }} aria-label="Previous scene" className="absolute left-2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-cream sm:left-6">
         <ChevronLeft size={28} />
       </button>
-      <button type="button" onClick={(e) => { e.stopPropagation(); onMove(1); }} aria-label="Next photo" className="absolute right-2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-cream sm:right-6">
+      <button type="button" onClick={(e) => { e.stopPropagation(); onMove(1); }} aria-label="Next scene" className="absolute right-2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-cream sm:right-6">
         <ChevronRight size={28} />
       </button>
 
@@ -73,7 +98,7 @@ function Lightbox({ items, index, onClose, onMove }) {
         <figcaption className="mt-4 text-center text-cream">
           <p className="font-display text-xl">{item.caption}</p>
           <p className="mt-1 font-script text-lg italic text-gold">{item.tip}</p>
-          <p className="mt-1 text-xs text-cream/60">{creditLine(item)}</p>
+          {creditLine(item) && <p className="mt-1 text-xs text-cream/60">{creditLine(item)}</p>}
         </figcaption>
       </motion.figure>
     </motion.div>
@@ -94,15 +119,14 @@ export default function Gallery() {
 
   return (
     <section id="gallery" className="bg-navy px-4 py-20 sm:py-28">
-      <SectionTitle eyebrow="A little preview of what is waiting" title="Moments to Capture" light />
+      <SectionTitle eyebrow="Eight places we will stop and frame" title="Scenes to Chase" light />
 
-      <div className="no-scrollbar mx-auto mb-10 flex max-w-6xl gap-2 overflow-x-auto pb-1 sm:justify-center" role="tablist" aria-label="Photo filters">
+      <div className="no-scrollbar mx-auto mb-10 flex max-w-6xl gap-2 overflow-x-auto pb-1 sm:justify-center" role="group" aria-label="Scene filters">
         {FILTERS.map(([id, label]) => (
           <button
             key={id}
             type="button"
-            role="tab"
-            aria-selected={filter === id}
+            aria-pressed={filter === id}
             onClick={() => setFilter(id)}
             className={`min-h-11 flex-none rounded-full px-5 text-sm font-semibold transition ${
               filter === id ? "bg-gold text-navy" : "bg-white/10 text-cream hover:bg-white/20"
@@ -116,9 +140,9 @@ export default function Gallery() {
       <div className="masonry mx-auto max-w-6xl">
         {items.map((p, i) => (
           <Reveal key={p.id} y={24}>
-            <button type="button" onClick={() => setActive(i)} className="group relative block w-full overflow-hidden rounded-2xl text-left" aria-label={`Open photo: ${p.caption}`}>
-              <Photo id={p.id} alt={p.caption} kind={p.kind} className={`${RATIO[p.ratio]} w-full transition duration-500 group-hover:scale-105`} />
-              <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-navy/85 via-transparent to-transparent p-3 opacity-100 sm:opacity-0 sm:transition sm:duration-300 sm:group-hover:opacity-100">
+            <button type="button" onClick={() => setActive(i)} className="group relative block w-full overflow-hidden rounded-2xl text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold" aria-label={`Open scene: ${p.caption}`}>
+              <Photo id={p.id} alt={p.caption} kind={p.kind} className={`${RATIO[p.ratio]} w-full transition duration-500 group-hover:scale-105 group-focus-visible:scale-105`} />
+              <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-navy/90 via-navy/60 to-transparent px-3 pb-3 pt-14 opacity-100 sm:opacity-0 sm:transition sm:duration-300 sm:group-hover:opacity-100 sm:group-focus-visible:opacity-100">
                 <p className="font-display text-sm font-bold text-cream sm:text-base">{p.caption}</p>
                 <p className="text-xs text-gold">{p.tip}</p>
               </div>

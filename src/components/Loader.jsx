@@ -1,11 +1,13 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function Loader() {
+  const reduce = useReducedMotion();
+
   return (
     <motion.div
       className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-navy"
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.8 } }}
+      exit={{ opacity: 0, transition: { duration: reduce ? 0 : 0.8 } }}
       role="status"
       aria-label="Loading"
     >

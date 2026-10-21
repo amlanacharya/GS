@@ -16,8 +16,26 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1600);
-    return () => clearTimeout(t);
+    const MIN_MS = 700;
+    const MAX_MS = 1600;
+    const start = performance.now();
+    let done = false;
+    let minTimer;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      setLoading(false);
+    };
+    const maxTimer = setTimeout(finish, MAX_MS);
+    const fontsReady = document.fonts?.ready ?? Promise.resolve();
+    fontsReady.then(() => {
+      const wait = Math.max(0, MIN_MS - (performance.now() - start));
+      minTimer = setTimeout(finish, wait);
+    });
+    return () => {
+      clearTimeout(maxTimer);
+      clearTimeout(minTimer);
+    };
   }, []);
 
   return (
@@ -28,10 +46,10 @@ export default function App() {
         <Hero />
         <Overview />
         <Itinerary />
+        <LoveNotes />
         <Gallery />
         <Food />
         <Packing />
-        <LoveNotes />
       </main>
       <Footer />
       <MusicToggle />
